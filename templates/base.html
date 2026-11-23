@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Sistema de Biblioteca{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+</head>
+<body>
+    <header class="cabecalho">
+        <div class="container cabecalho-conteudo">
+            <a class="logo" href="{% url 'inicio' %}">📚 Biblioteca</a>
+            <nav class="menu">
+                <a class="menu-link ativo" href="{% url 'inicio' %}">Início</a>
+                <a class="menu-link" href="/admin/">Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+            <ul class="mensagens">
+                {% for mensagem in messages %}
+                    <li class="mensagem mensagem-{{ mensagem.tags }}">{{ mensagem }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block conteudo %}{% endblock %}
+    </main>
+
+    <footer class="rodape">
+        <div class="container">
+            <p>A3 UDWMJ — Sistema de Biblioteca (Django + Oracle)</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/app.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
