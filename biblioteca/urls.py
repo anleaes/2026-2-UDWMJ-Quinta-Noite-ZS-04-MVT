@@ -11,6 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('categorias/', include('categorias.urls')),
     path('autores/', include('autores.urls')),
+    path('editoras/', include('editoras.urls')),
 ]
 
 # Serve os arquivos de mídia (uploads) apenas em desenvolvimento.
