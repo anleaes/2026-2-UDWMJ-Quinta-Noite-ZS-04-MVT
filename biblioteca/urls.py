@@ -10,6 +10,7 @@ urlpatterns = [
     path('', inicio, name='inicio'),
     path('admin/', admin.site.urls),
     path('categorias/', include('categorias.urls')),
+    path('autores/', include('autores.urls')),
 ]
 
 # Serve os arquivos de mídia (uploads) apenas em desenvolvimento.

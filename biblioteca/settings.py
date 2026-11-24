@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Apps do projeto (uma linha por app)
     'categorias',
+    'autores',
 ]
 
 MIDDLEWARE = [
