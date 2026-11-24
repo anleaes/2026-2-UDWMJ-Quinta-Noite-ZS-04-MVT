@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Início — Sistema de Biblioteca{% endblock %}
+
+{% block conteudo %}
+<section class="destaque">
+    <h1>Sistema de Gerenciamento de Biblioteca</h1>
+    <p>
+        Cadastro de livros, exemplares, autores, leitores, empréstimos,
+        reservas e multas — tudo em um só lugar.
+    </p>
+    <p class="destaque-acoes">
+        <a class="botao" href="/admin/">Acessar o Admin</a>
+    </p>
+</section>
+
+<section class="cards">
+    <article class="card">
+        <h2>📖 Acervo</h2>
+        <p>Livros, exemplares, estantes, autores e editoras.</p>
+    </article>
+    <article class="card">
+        <h2>👤 Leitores</h2>
+        <p>Alunos, professores e comunidade, com foto e histórico.</p>
+    </article>
+    <article class="card">
+        <h2>🔄 Empréstimos</h2>
+        <p>Regras de limite, prazo, atrasos e multas automáticas.</p>
+    </article>
+    <article class="card">
+        <h2>📝 Avaliações</h2>
+        <p>Opinião dos leitores sobre os livros do acervo.</p>
+    </article>
+</section>
+{% endblock %}
