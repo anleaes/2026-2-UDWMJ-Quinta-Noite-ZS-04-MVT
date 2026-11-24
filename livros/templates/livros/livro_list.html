@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Livros — Sistema de Biblioteca{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>Livros</h1>
+    <a class="botao" href="{% url 'livros:livro_criar' %}">+ Novo livro</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#lista-livros" placeholder="Buscar por título, autor, editora…" aria-label="Buscar livros">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if livros %}
+<section class="cards cards-livros" id="lista-livros" data-busca-lista>
+    {% for livro in livros %}
+    <article class="card card-livro">
+        <a href="{% url 'livros:livro_detalhar' livro.pk %}">
+            {% if livro.capa %}
+                <img class="capa-livro" src="{{ livro.capa.url }}" alt="Capa de {{ livro.titulo }}">
+            {% else %}
+                <div class="capa-livro capa-vazia">Sem capa</div>
+            {% endif %}
+        </a>
+        <h2><a href="{% url 'livros:livro_detalhar' livro.pk %}">{{ livro.titulo }}</a></h2>
+        <p class="card-livro-autores">
+            {% for autor in livro.autores.all %}{{ autor.nome }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        </p>
+        <p class="card-livro-meta">{{ livro.editora.nome }} · {{ livro.ano_publicacao }}</p>
+        <p class="card-livro-meta">Categoria: {{ livro.categoria.nome }}</p>
+        <div class="acoes">
+            <a class="botao botao-pequeno" href="{% url 'livros:livro_editar' livro.pk %}">Editar</a>
+            <a class="botao botao-pequeno botao-perigo" href="{% url 'livros:livro_excluir' livro.pk %}">Excluir</a>
+        </div>
+    </article>
+    {% endfor %}
+</section>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhum livro cadastrado ainda.</p>
+{% endif %}
+{% endblock %}

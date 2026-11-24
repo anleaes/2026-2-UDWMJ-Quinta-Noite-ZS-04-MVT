@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block titulo %}{{ livro.titulo }} — Livros{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>{{ livro.titulo }}</h1>
+    <div class="acoes">
+        <a class="botao" href="{% url 'livros:livro_editar' livro.pk %}">Editar</a>
+        <a class="botao botao-perigo" href="{% url 'livros:livro_excluir' livro.pk %}">Excluir</a>
+        <a class="botao botao-neutro" href="{% url 'livros:livro_listar' %}">Voltar</a>
+    </div>
+</div>
+
+{% if livro.capa %}
+    <img class="foto-detalhe" src="{{ livro.capa.url }}" alt="Capa de {{ livro.titulo }}">
+{% endif %}
+
+<dl class="detalhes">
+    <dt>Título</dt><dd>{{ livro.titulo }}</dd>
+    <dt>ISBN</dt><dd>{{ livro.isbn }}</dd>
+    <dt>Ano de publicação</dt><dd>{{ livro.ano_publicacao }}</dd>
+    <dt>Número de páginas</dt><dd>{{ livro.num_paginas }}</dd>
+    <dt>Preço de reposição</dt><dd>R$ {{ livro.preco_reposicao|floatformat:2 }}</dd>
+    <dt>Editora</dt><dd><a href="{% url 'editoras:editora_detalhar' livro.editora.pk %}">{{ livro.editora.nome }}</a></dd>
+    <dt>Categoria</dt><dd><a href="{% url 'categorias:categoria_detalhar' livro.categoria.pk %}">{{ livro.categoria.nome }}</a></dd>
+    <dt>Autores</dt>
+    <dd>
+        {% for autor in livro.autores.all %}
+            <a href="{% url 'autores:autor_detalhar' autor.pk %}">{{ autor.nome }}</a>{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            —
+        {% endfor %}
+    </dd>
+    <dt>Sinopse</dt><dd>{{ livro.sinopse|default:"—"|linebreaksbr }}</dd>
+</dl>
+{% endblock %}
