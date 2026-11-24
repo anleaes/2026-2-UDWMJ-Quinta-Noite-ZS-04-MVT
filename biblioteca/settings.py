@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # Apps do projeto (uma linha por app)
     'categorias',
     'autores',
+    'editoras',
 ]
 
 MIDDLEWARE = [
