@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block titulo %}{{ editora.nome }} — Editoras{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>{{ editora.nome }}</h1>
+    <div class="acoes">
+        <a class="botao" href="{% url 'editoras:editora_editar' editora.pk %}">Editar</a>
+        <a class="botao botao-perigo" href="{% url 'editoras:editora_excluir' editora.pk %}">Excluir</a>
+        <a class="botao botao-neutro" href="{% url 'editoras:editora_listar' %}">Voltar</a>
+    </div>
+</div>
+
+<dl class="detalhes">
+    <dt>Nome</dt><dd>{{ editora.nome }}</dd>
+    <dt>CNPJ</dt><dd>{{ editora.cnpj }}</dd>
+    <dt>E-mail</dt><dd>{{ editora.email }}</dd>
+    <dt>Site</dt><dd>{{ editora.site|default:"—"|urlize }}</dd>
+    <dt>Cidade</dt><dd>{{ editora.cidade }}</dd>
+</dl>
+{% endblock %}
