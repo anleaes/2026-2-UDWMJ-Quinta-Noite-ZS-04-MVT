@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Avaliações — Sistema de Biblioteca{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>Avaliações</h1>
+    <a class="botao" href="{% url 'avaliacoes:avaliacao_criar' %}">+ Nova avaliação</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-avaliacoes" placeholder="Buscar por livro, leitor, nota…" aria-label="Buscar avaliações">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if avaliacoes %}
+<table class="tabela" id="tabela-avaliacoes" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Livro</th>
+            <th>Leitor</th>
+            <th>Nota</th>
+            <th>Data</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for avaliacao in avaliacoes %}
+        <tr>
+            <td><a href="{% url 'avaliacoes:avaliacao_detalhar' avaliacao.pk %}">{{ avaliacao.livro.titulo }}</a></td>
+            <td>{{ avaliacao.leitor.nome }}</td>
+            <td>{{ avaliacao.nota }} / 5</td>
+            <td>{{ avaliacao.data|date:"d/m/Y H:i" }}</td>
+            <td class="coluna-acoes">
+                <a class="botao botao-pequeno" href="{% url 'avaliacoes:avaliacao_editar' avaliacao.pk %}">Editar</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'avaliacoes:avaliacao_excluir' avaliacao.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhuma avaliação registrada ainda.</p>
+{% endif %}
+{% endblock %}

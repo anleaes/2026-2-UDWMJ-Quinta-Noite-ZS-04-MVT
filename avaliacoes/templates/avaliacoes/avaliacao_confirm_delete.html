@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Excluir avaliação — Avaliações{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>Excluir avaliação</h1>
+</div>
+
+<div class="aviso-perigo">
+    <p>Tem certeza de que deseja excluir a avaliação <strong>{{ avaliacao }}</strong>?</p>
+    <p>Esta ação não pode ser desfeita.</p>
+</div>
+
+<form method="post" class="acoes" data-confirmar="Confirma a exclusão? Esta ação não pode ser desfeita.">
+    {% csrf_token %}
+    <button class="botao botao-perigo" type="submit">Sim, excluir</button>
+    <a class="botao botao-neutro" href="{% url 'avaliacoes:avaliacao_detalhar' avaliacao.pk %}">Cancelar</a>
+</form>
+{% endblock %}
