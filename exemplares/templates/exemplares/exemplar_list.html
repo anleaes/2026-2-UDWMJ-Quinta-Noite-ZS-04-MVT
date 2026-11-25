@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Exemplares — Sistema de Biblioteca{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>Exemplares</h1>
+    <a class="botao" href="{% url 'exemplares:exemplar_criar' %}">+ Novo exemplar</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-exemplares" placeholder="Buscar por tombo, livro, estante…" aria-label="Buscar exemplares">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if exemplares %}
+<table class="tabela" id="tabela-exemplares" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Tombo</th>
+            <th>Livro</th>
+            <th>Estado</th>
+            <th>Disponível</th>
+            <th>Estante</th>
+            <th>Aquisição</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for exemplar in exemplares %}
+        <tr>
+            <td><a href="{% url 'exemplares:exemplar_detalhar' exemplar.pk %}">{{ exemplar.codigo_tombo }}</a></td>
+            <td>{{ exemplar.livro.titulo }}</td>
+            <td>{{ exemplar.get_estado_display }}</td>
+            <td>{% if exemplar.disponivel %}Sim{% else %}Não{% endif %}</td>
+            <td>{{ exemplar.estante }}</td>
+            <td>{{ exemplar.data_aquisicao|date:"d/m/Y" }}</td>
+            <td class="coluna-acoes">
+                <a class="botao botao-pequeno" href="{% url 'exemplares:exemplar_editar' exemplar.pk %}">Editar</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'exemplares:exemplar_excluir' exemplar.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhum exemplar cadastrado ainda.</p>
+{% endif %}
+{% endblock %}

@@ -14,6 +14,7 @@ urlpatterns = [
     path('editoras/', include('editoras.urls')),
     path('estantes/', include('estantes.urls')),
     path('livros/', include('livros.urls')),
+    path('exemplares/', include('exemplares.urls')),
     path('leitores/', include('leitores.urls')),
     path('funcionarios/', include('funcionarios.urls')),
     path('reservas/', include('reservas.urls')),
