@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'leitores',
     'funcionarios',
     'reservas',
+    'avaliacoes',
 ]
 
 MIDDLEWARE = [
