@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Leitores — Sistema de Biblioteca{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>Leitores</h1>
+    <a class="botao" href="{% url 'leitores:leitor_criar' %}">+ Novo leitor</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-leitores" placeholder="Buscar por nome, CPF, e-mail…" aria-label="Buscar leitores">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if leitores %}
+<table class="tabela" id="tabela-leitores" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Foto</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Tipo</th>
+            <th>E-mail</th>
+            <th>Ativo</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for leitor in leitores %}
+        <tr>
+            <td>
+                {% if leitor.foto %}
+                    <img class="miniatura" src="{{ leitor.foto.url }}" alt="Foto de {{ leitor.nome }}">
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td><a href="{% url 'leitores:leitor_detalhar' leitor.pk %}">{{ leitor.nome }}</a></td>
+            <td>{{ leitor.cpf }}</td>
+            <td>{{ leitor.get_tipo_display }}</td>
+            <td>{{ leitor.email }}</td>
+            <td>{% if leitor.ativo %}Sim{% else %}Não{% endif %}</td>
+            <td class="coluna-acoes">
+                <a class="botao botao-pequeno" href="{% url 'leitores:leitor_editar' leitor.pk %}">Editar</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'leitores:leitor_excluir' leitor.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhum leitor cadastrado ainda.</p>
+{% endif %}
+{% endblock %}
