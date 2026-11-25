@@ -4,32 +4,132 @@
 
 {% block conteudo %}
 <section class="destaque">
-    <h1>Sistema de Gerenciamento de Biblioteca</h1>
-    <p>
-        Cadastro de livros, exemplares, autores, leitores, empréstimos,
-        reservas e multas — tudo em um só lugar.
-    </p>
-    <p class="destaque-acoes">
-        <a class="botao" href="/admin/">Acessar o Admin</a>
-    </p>
+    <div class="destaque-texto">
+        <p class="destaque-data">
+            <svg class="icone" aria-hidden="true"><use href="#ic-calendario"/></svg>
+            {% now "l, j \d\e F \d\e Y" as hoje %}{{ hoje|lower|capfirst }}
+        </p>
+        <h1>Painel da Biblioteca</h1>
+        <p>Visão geral do acervo e da circulação em tempo real.</p>
+    </div>
+    <div class="destaque-acoes">
+        <a class="botao botao-claro" href="{% url 'emprestimos:emprestimo_criar' %}">
+            <svg class="icone" aria-hidden="true"><use href="#ic-mais"/></svg>Novo empréstimo
+        </a>
+        <a class="botao botao-contorno-claro" href="{% url 'leitores:leitor_criar' %}">Cadastrar leitor</a>
+    </div>
 </section>
 
-<section class="cards">
-    <article class="card">
-        <h2>📖 Acervo</h2>
-        <p>Livros, exemplares, estantes, autores e editoras.</p>
-    </article>
-    <article class="card">
-        <h2>👤 Leitores</h2>
-        <p>Alunos, professores e comunidade, com foto e histórico.</p>
-    </article>
-    <article class="card">
-        <h2>🔄 Empréstimos</h2>
-        <p>Regras de limite, prazo, atrasos e multas automáticas.</p>
-    </article>
-    <article class="card">
-        <h2>📝 Avaliações</h2>
-        <p>Opinião dos leitores sobre os livros do acervo.</p>
-    </article>
+<section class="painel-contadores" aria-label="Indicadores da biblioteca">
+    <a class="contador" href="{% url 'livros:livro_listar' %}">
+        <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-livro"/></svg></span>
+        <span class="contador-numero" data-contar="{{ contadores.livros }}">{{ contadores.livros }}</span>
+        <span class="contador-rotulo">Livros no acervo</span>
+    </a>
+    <a class="contador" href="{% url 'exemplares:exemplar_listar' %}">
+        <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-exemplar"/></svg></span>
+        <span class="contador-numero" data-contar="{{ contadores.exemplares_disponiveis }}">{{ contadores.exemplares_disponiveis }}</span>
+        <span class="contador-rotulo">Exemplares disponíveis</span>
+    </a>
+    <a class="contador" href="{% url 'emprestimos:emprestimo_listar' %}">
+        <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-circulacao"/></svg></span>
+        <span class="contador-numero" data-contar="{{ contadores.emprestimos_ativos }}">{{ contadores.emprestimos_ativos }}</span>
+        <span class="contador-rotulo">Empréstimos ativos</span>
+    </a>
+    <a class="contador contador-alerta" href="{% url 'emprestimos:emprestimo_listar' %}">
+        <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-relogio"/></svg></span>
+        <span class="contador-numero" data-contar="{{ contadores.emprestimos_atrasados }}">{{ contadores.emprestimos_atrasados }}</span>
+        <span class="contador-rotulo">Empréstimos atrasados</span>
+    </a>
+    <a class="contador contador-alerta" href="{% url 'multas:multa_listar' %}">
+        <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-multa"/></svg></span>
+        <span class="contador-numero" data-contar="{{ contadores.multas_pendentes }}">{{ contadores.multas_pendentes }}</span>
+        <span class="contador-rotulo">Multas pendentes</span>
+    </a>
+    <a class="contador" href="{% url 'reservas:reserva_listar' %}">
+        <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-reserva"/></svg></span>
+        <span class="contador-numero" data-contar="{{ contadores.reservas_aguardando }}">{{ contadores.reservas_aguardando }}</span>
+        <span class="contador-rotulo">Reservas aguardando</span>
+    </a>
+</section>
+
+<section class="painel-secao ocupacao" aria-label="Ocupação do acervo">
+    <div class="ocupacao-cabecalho">
+        <h2>Ocupação do acervo</h2>
+        <span class="ocupacao-percentual"><span data-contar="{{ ocupacao.percentual_disponivel }}">{{ ocupacao.percentual_disponivel }}</span>% disponível</span>
+    </div>
+    <div class="barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ ocupacao.percentual_disponivel }}" aria-label="Percentual de exemplares disponíveis">
+        <span class="barra-preenchimento" style="--valor: {{ ocupacao.percentual_disponivel }}%"></span>
+    </div>
+    <div class="ocupacao-legenda">
+        <span><i class="ponto ponto-disponivel"></i>{{ ocupacao.disponiveis }} disponíveis</span>
+        <span><i class="ponto ponto-emprestado"></i>{{ ocupacao.indisponiveis }} emprestados ou indisponíveis</span>
+        <span class="ocupacao-total">{{ ocupacao.total }} exemplares no total</span>
+    </div>
+</section>
+
+<section class="painel-secao">
+    <div class="cabecalho-pagina">
+        <h2>Últimos empréstimos</h2>
+        <a class="botao botao-pequeno" href="{% url 'emprestimos:emprestimo_listar' %}">Ver todos</a>
+    </div>
+    {% if ultimos_emprestimos %}
+    <table class="tabela">
+        <thead>
+            <tr>
+                <th>Leitor</th>
+                <th>Exemplar</th>
+                <th>Empréstimo</th>
+                <th>Prevista</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emprestimo in ultimos_emprestimos %}
+            <tr class="{% if emprestimo.esta_atrasado %}linha-atrasada{% endif %}">
+                <td><a href="{% url 'emprestimos:emprestimo_detalhar' emprestimo.pk %}">{{ emprestimo.leitor.nome }}</a></td>
+                <td>{{ emprestimo.exemplar.codigo_tombo }} — {{ emprestimo.exemplar.livro.titulo }}</td>
+                <td>{{ emprestimo.data_emprestimo|date:"d/m/Y H:i" }}</td>
+                <td>{{ emprestimo.data_prevista|date:"d/m/Y" }}</td>
+                <td>
+                    {% if emprestimo.esta_atrasado %}
+                        <span class="etiqueta etiqueta-atraso">Atrasado</span>
+                    {% elif emprestimo.data_devolucao %}
+                        <span class="etiqueta etiqueta-sucesso">{{ emprestimo.get_status_display }}</span>
+                    {% else %}
+                        <span class="etiqueta">{{ emprestimo.get_status_display }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="vazio">Nenhum empréstimo registrado ainda.</p>
+    {% endif %}
+</section>
+
+<section class="painel-secao">
+    <div class="cabecalho-pagina">
+        <h2>Ações rápidas</h2>
+    </div>
+    <div class="acoes-rapidas">
+        <a class="acao-rapida" href="{% url 'emprestimos:emprestimo_criar' %}">
+            <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-circulacao"/></svg></span>
+            <strong>Emprestar</strong><small>Registrar um novo empréstimo</small>
+        </a>
+        <a class="acao-rapida" href="{% url 'reservas:reserva_criar' %}">
+            <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-reserva"/></svg></span>
+            <strong>Reservar</strong><small>Entrar na fila de um livro</small>
+        </a>
+        <a class="acao-rapida" href="{% url 'livros:livro_criar' %}">
+            <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-livro"/></svg></span>
+            <strong>Cadastrar livro</strong><small>Adicionar título ao acervo</small>
+        </a>
+        <a class="acao-rapida" href="{% url 'leitores:leitor_criar' %}">
+            <span class="contador-icone"><svg class="icone" aria-hidden="true"><use href="#ic-autor"/></svg></span>
+            <strong>Cadastrar leitor</strong><small>Aluno, professor ou comunidade</small>
+        </a>
+    </div>
 </section>
 {% endblock %}
