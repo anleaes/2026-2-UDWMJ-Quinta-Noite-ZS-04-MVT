@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Estante {{ estante.prateleira }} — Estantes{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>Estante — setor {{ estante.setor }}, corredor {{ estante.corredor }}, prateleira {{ estante.prateleira }}</h1>
+    <div class="acoes">
+        <a class="botao" href="{% url 'estantes:estante_editar' estante.pk %}">Editar</a>
+        <a class="botao botao-perigo" href="{% url 'estantes:estante_excluir' estante.pk %}">Excluir</a>
+        <a class="botao botao-neutro" href="{% url 'estantes:estante_listar' %}">Voltar</a>
+    </div>
+</div>
+
+<dl class="detalhes">
+    <dt>Setor</dt><dd>{{ estante.setor }}</dd>
+    <dt>Corredor</dt><dd>{{ estante.corredor }}</dd>
+    <dt>Prateleira</dt><dd>{{ estante.prateleira }}</dd>
+    <dt>Capacidade</dt><dd>{{ estante.capacidade }} exemplares</dd>
+    <dt>Largura</dt><dd>{{ estante.largura_metros|floatformat:2 }} m</dd>
+</dl>
+{% endblock %}

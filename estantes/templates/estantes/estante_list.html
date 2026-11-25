@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Estantes — Sistema de Biblioteca{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>Estantes</h1>
+    <a class="botao" href="{% url 'estantes:estante_criar' %}">+ Nova estante</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-estantes" placeholder="Buscar por setor, corredor…" aria-label="Buscar estantes">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if estantes %}
+<table class="tabela" id="tabela-estantes" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Setor</th>
+            <th>Corredor</th>
+            <th>Prateleira</th>
+            <th>Capacidade</th>
+            <th>Largura (m)</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for estante in estantes %}
+        <tr>
+            <td><a href="{% url 'estantes:estante_detalhar' estante.pk %}">{{ estante.setor }}</a></td>
+            <td>{{ estante.corredor }}</td>
+            <td>{{ estante.prateleira }}</td>
+            <td>{{ estante.capacidade }}</td>
+            <td>{{ estante.largura_metros|floatformat:2 }}</td>
+            <td class="coluna-acoes">
+                <a class="botao botao-pequeno" href="{% url 'estantes:estante_editar' estante.pk %}">Editar</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'estantes:estante_excluir' estante.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhuma estante cadastrada ainda.</p>
+{% endif %}
+{% endblock %}
