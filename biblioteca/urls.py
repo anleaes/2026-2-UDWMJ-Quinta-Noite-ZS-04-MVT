@@ -15,6 +15,7 @@ urlpatterns = [
     path('estantes/', include('estantes.urls')),
     path('livros/', include('livros.urls')),
     path('leitores/', include('leitores.urls')),
+    path('funcionarios/', include('funcionarios.urls')),
 ]
 
 # Serve os arquivos de mídia (uploads) apenas em desenvolvimento.
