@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Reservas — Sistema de Biblioteca{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>Reservas</h1>
+    <a class="botao" href="{% url 'reservas:reserva_criar' %}">+ Nova reserva</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-reservas" placeholder="Buscar por livro, leitor, status…" aria-label="Buscar reservas">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if reservas %}
+<table class="tabela" id="tabela-reservas" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Livro</th>
+            <th>Leitor</th>
+            <th>Posição na fila</th>
+            <th>Data da reserva</th>
+            <th>Status</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reserva in reservas %}
+        <tr>
+            <td><a href="{% url 'reservas:reserva_detalhar' reserva.pk %}">{{ reserva.livro.titulo }}</a></td>
+            <td>{{ reserva.leitor.nome }}</td>
+            <td>{{ reserva.posicao_fila }}º</td>
+            <td>{{ reserva.data_reserva|date:"d/m/Y H:i" }}</td>
+            <td>{{ reserva.get_status_display }}</td>
+            <td class="coluna-acoes">
+                <a class="botao botao-pequeno" href="{% url 'reservas:reserva_editar' reserva.pk %}">Editar</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'reservas:reserva_excluir' reserva.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhuma reserva registrada ainda.</p>
+{% endif %}
+{% endblock %}
