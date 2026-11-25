@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block titulo %}{{ emprestimo }} — Empréstimos{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>{{ emprestimo }}</h1>
+    <div class="acoes">
+        {% if not emprestimo.data_devolucao %}
+        <form method="post" action="{% url 'emprestimos:emprestimo_devolver' emprestimo.pk %}" class="form-inline" data-confirmar="Registrar a devolução deste empréstimo? Se houver atraso, uma multa será gerada.">
+            {% csrf_token %}
+            <button class="botao" type="submit">Registrar devolução</button>
+        </form>
+        {% endif %}
+        <a class="botao botao-neutro" href="{% url 'emprestimos:emprestimo_editar' emprestimo.pk %}">Editar</a>
+        <a class="botao botao-perigo" href="{% url 'emprestimos:emprestimo_excluir' emprestimo.pk %}">Excluir</a>
+        <a class="botao botao-neutro" href="{% url 'emprestimos:emprestimo_listar' %}">Voltar</a>
+    </div>
+</div>
+
+{% if emprestimo.esta_atrasado %}
+<p class="aviso-atraso">Este empréstimo está <strong>atrasado</strong>. A devolução gerará multa de R$ 1,00 por dia.</p>
+{% endif %}
+
+<dl class="detalhes">
+    <dt>Leitor</dt><dd><a href="{% url 'leitores:leitor_detalhar' emprestimo.leitor.pk %}">{{ emprestimo.leitor.nome }}</a></dd>
+    <dt>Exemplar</dt><dd>{{ emprestimo.exemplar }}</dd>
+    <dt>Funcionário</dt><dd><a href="{% url 'funcionarios:funcionario_detalhar' emprestimo.funcionario.pk %}">{{ emprestimo.funcionario.nome }}</a></dd>
+    <dt>Data do empréstimo</dt><dd>{{ emprestimo.data_emprestimo|date:"d/m/Y H:i" }}</dd>
+    <dt>Devolução prevista</dt><dd>{{ emprestimo.data_prevista|date:"d/m/Y" }}</dd>
+    <dt>Data da devolução</dt><dd>{{ emprestimo.data_devolucao|date:"d/m/Y"|default:"—" }}</dd>
+    <dt>Status</dt>
+    <dd>
+        {% if emprestimo.esta_atrasado %}
+            <span class="etiqueta etiqueta-atraso">Atrasado</span>
+        {% else %}
+            {{ emprestimo.get_status_display }}
+        {% endif %}
+    </dd>
+    {% if emprestimo.multas %}
+    <dt>Multa</dt>
+    <dd>
+        R$ {{ emprestimo.multas.valor|floatformat:2 }} ({{ emprestimo.multas.dias_atraso }} dia(s))
+        — {% if emprestimo.multas.paga %}paga{% else %}pendente{% endif %}
+        — <a href="{% url 'multas:multa_detalhar' emprestimo.multas.pk %}">ver</a>
+    </dd>
+    {% endif %}
+</dl>
+{% endblock %}

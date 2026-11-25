@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'exemplares',
     'leitores',
     'funcionarios',
+    'emprestimos',
     'reservas',
     'avaliacoes',
 ]
