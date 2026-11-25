@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'estantes',
     'livros',
     'leitores',
+    'funcionarios',
 ]
 
 MIDDLEWARE = [
