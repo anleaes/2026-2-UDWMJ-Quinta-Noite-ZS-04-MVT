@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block titulo %}{{ funcionario.nome }} — Funcionários{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <h1>{{ funcionario.nome }}</h1>
+    <div class="acoes">
+        <a class="botao" href="{% url 'funcionarios:funcionario_editar' funcionario.pk %}">Editar</a>
+        <a class="botao botao-perigo" href="{% url 'funcionarios:funcionario_excluir' funcionario.pk %}">Excluir</a>
+        <a class="botao botao-neutro" href="{% url 'funcionarios:funcionario_listar' %}">Voltar</a>
+    </div>
+</div>
+
+<dl class="detalhes">
+    <dt>Nome</dt><dd>{{ funcionario.nome }}</dd>
+    <dt>Matrícula</dt><dd>{{ funcionario.matricula }}</dd>
+    <dt>Cargo</dt><dd>{{ funcionario.get_cargo_display }}</dd>
+    <dt>Salário</dt><dd>R$ {{ funcionario.salario|floatformat:2 }}</dd>
+    <dt>Hora de entrada</dt><dd>{{ funcionario.hora_entrada|time:"H:i" }}</dd>
+    <dt>Hora de saída</dt><dd>{{ funcionario.hora_saida|time:"H:i" }}</dd>
+</dl>
+{% endblock %}
