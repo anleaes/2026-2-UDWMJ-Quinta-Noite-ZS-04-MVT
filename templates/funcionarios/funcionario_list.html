@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Funcionários — Sistema de Biblioteca{% endblock %}
+
+{% block body %}
+<div class="cabecalho-pagina">
+    <h1>Funcionários</h1>
+    <a class="botao" href="{% url 'funcionarios:funcionario_criar' %}">+ Novo funcionário</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-funcionarios" placeholder="Buscar por nome, matrícula, cargo…" aria-label="Buscar funcionários">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if funcionarios %}
+<table class="tabela" id="tabela-funcionarios" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Matrícula</th>
+            <th>Cargo</th>
+            <th>Salário</th>
+            <th>Entrada</th>
+            <th>Saída</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for funcionario in funcionarios %}
+        <tr>
+            <td><a href="{% url 'funcionarios:funcionario_detalhar' funcionario.pk %}">{{ funcionario.nome }}</a></td>
+            <td>{{ funcionario.matricula }}</td>
+            <td>{{ funcionario.get_cargo_display }}</td>
+            <td>R$ {{ funcionario.salario|floatformat:2 }}</td>
+            <td>{{ funcionario.hora_entrada|time:"H:i" }}</td>
+            <td>{{ funcionario.hora_saida|time:"H:i" }}</td>
+            <td class="coluna-acoes">
+                <a class="botao botao-pequeno" href="{% url 'funcionarios:funcionario_editar' funcionario.pk %}">Editar</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'funcionarios:funcionario_excluir' funcionario.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhum funcionário cadastrado ainda.</p>
+{% endif %}
+{% endblock %}

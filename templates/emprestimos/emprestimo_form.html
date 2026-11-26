@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }} — Empréstimos{% endblock %}
+
+{% block body %}
+<div class="cabecalho-pagina">
+    <h1>{{ titulo }}</h1>
+</div>
+
+<form method="post" class="formulario">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% if emprestimo %}
+        {# Edição: leitor e exemplar só como texto (trocar exige devolução). #}
+        <div class="campo">
+            <span class="rotulo-fixo">Leitor</span>
+            <p class="valor-fixo">{{ emprestimo.leitor.nome }}</p>
+        </div>
+        <div class="campo">
+            <span class="rotulo-fixo">Exemplar</span>
+            <p class="valor-fixo">{{ emprestimo.exemplar }}</p>
+        </div>
+    {% endif %}
+    {% for campo in form %}
+        <div class="campo">
+            <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+            {{ campo }}
+            {% if campo.help_text %}<small class="ajuda">{{ campo.help_text }}</small>{% endif %}
+            {{ campo.errors }}
+        </div>
+    {% endfor %}
+    {% if emprestimo %}
+        <p class="ajuda">Na edição, só o funcionário responsável pode ser alterado. Para trocar o leitor ou o exemplar, registre a devolução e crie um novo empréstimo.</p>
+    {% else %}
+        <p class="ajuda">O prazo de devolução é calculado automaticamente: 14 dias (professor: 21 dias).</p>
+    {% endif %}
+    <div class="acoes">
+        <button class="botao" type="submit">Salvar</button>
+        {% if emprestimo %}
+        <a class="botao botao-neutro" href="{% url 'emprestimos:emprestimo_detalhar' emprestimo.pk %}">Cancelar</a>
+        {% else %}
+        <a class="botao botao-neutro" href="{% url 'emprestimos:emprestimo_listar' %}">Cancelar</a>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}

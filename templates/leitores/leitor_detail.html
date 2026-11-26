@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ leitor.nome }} — Leitores{% endblock %}
+
+{% block body %}
+<div class="cabecalho-pagina">
+    <h1>{{ leitor.nome }}</h1>
+    <div class="acoes">
+        <a class="botao" href="{% url 'leitores:leitor_editar' leitor.pk %}">Editar</a>
+        <a class="botao botao-perigo" href="{% url 'leitores:leitor_excluir' leitor.pk %}">Excluir</a>
+        <a class="botao botao-neutro" href="{% url 'leitores:leitor_listar' %}">Voltar</a>
+    </div>
+</div>
+
+{% if leitor.foto %}
+    <img class="foto-detalhe" src="{{ leitor.foto.url }}" alt="Foto de {{ leitor.nome }}">
+{% endif %}
+
+<dl class="detalhes">
+    <dt>Nome</dt><dd>{{ leitor.nome }}</dd>
+    <dt>CPF</dt><dd>{{ leitor.cpf }}</dd>
+    <dt>E-mail</dt><dd>{{ leitor.email }}</dd>
+    <dt>Telefone</dt><dd>{{ leitor.telefone }}</dd>
+    <dt>Tipo</dt><dd>{{ leitor.get_tipo_display }}</dd>
+    <dt>Limite de empréstimos</dt><dd>{{ leitor.limite_emprestimos }} simultâneo(s)</dd>
+    <dt>Ativo</dt><dd>{% if leitor.ativo %}Sim{% else %}Não{% endif %}</dd>
+    <dt>Data de cadastro</dt><dd>{{ leitor.data_cadastro|date:"d/m/Y H:i" }}</dd>
+</dl>
+{% endblock %}

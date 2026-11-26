@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Multas — Sistema de Biblioteca{% endblock %}
+
+{% block body %}
+<div class="cabecalho-pagina">
+    <h1>Multas</h1>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-multas" placeholder="Buscar por leitor, exemplar, valor…" aria-label="Buscar multas">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if multas %}
+<table class="tabela" id="tabela-multas" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Leitor</th>
+            <th>Exemplar</th>
+            <th>Dias de atraso</th>
+            <th>Valor</th>
+            <th>Paga</th>
+            <th>Pagamento</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for multa in multas %}
+        <tr>
+            <td><a href="{% url 'multas:multa_detalhar' multa.pk %}">{{ multa.emprestimo.leitor.nome }}</a></td>
+            <td>{{ multa.emprestimo.exemplar }}</td>
+            <td>{{ multa.dias_atraso }}</td>
+            <td>R$ {{ multa.valor|floatformat:2 }}</td>
+            <td>{% if multa.paga %}Sim{% else %}Não{% endif %}</td>
+            <td>{{ multa.data_pagamento|date:"d/m/Y"|default:"—" }}</td>
+            <td class="coluna-acoes">
+                {% if not multa.paga %}
+                <form method="post" action="{% url 'multas:multa_marcar_paga' multa.pk %}" class="form-inline">
+                    {% csrf_token %}
+                    <button class="botao botao-pequeno" type="submit">Marcar como paga</button>
+                </form>
+                {% endif %}
+                <a class="botao botao-pequeno botao-neutro" href="{% url 'multas:multa_editar' multa.pk %}">Comprovante</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'multas:multa_excluir' multa.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhuma multa registrada ainda.</p>
+{% endif %}
+{% endblock %}
