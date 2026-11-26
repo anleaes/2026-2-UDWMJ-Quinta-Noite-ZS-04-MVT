@@ -49,7 +49,8 @@
     --sombra-3: 0 18px 40px rgba(75, 0, 0, .16), 0 4px 10px rgba(17, 17, 17, .06);
     --anel-foco: 0 0 0 4px rgba(239, 56, 30, .18);
 
-    --curva: cubic-bezier(.2, .8, .2, 1);
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
     --rapido: 160ms;
     --medio: 260ms;
     --lento: 450ms;
@@ -71,6 +72,7 @@
 
 html {
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -93,17 +95,18 @@ img {
 a {
     color: var(--vermelho-600);
     text-decoration: none;
-    transition: color var(--rapido) var(--curva);
+    transition: color var(--rapido) var(--ease-out);
 }
 
-a:hover {
-    color: var(--vermelho-700);
+@media (hover: hover) and (pointer: fine) {
+    a:hover {
+        color: var(--vermelho-700);
+    }
 }
 
 :focus-visible {
     outline: none;
     box-shadow: var(--anel-foco);
-    border-radius: var(--raio-sm);
 }
 
 ::selection {
@@ -144,7 +147,7 @@ a:hover {
     background: rgba(255, 255, 255, .92);
     backdrop-filter: saturate(180%) blur(10px);
     border-bottom: 1px solid var(--cinza-200);
-    transition: box-shadow var(--medio) var(--curva);
+    transition: box-shadow var(--medio) var(--ease-out);
 }
 
 .cabecalho::before {
@@ -175,19 +178,23 @@ a:hover {
     color: var(--preto);
 }
 
-.logo:hover {
-    color: var(--preto);
+@media (hover: hover) and (pointer: fine) {
+    .logo:hover {
+        color: var(--preto);
+    }
 }
 
 .logo-imagem {
     height: 30px;
     width: auto;
     display: block;
-    transition: transform var(--medio) var(--curva);
+    transition: transform var(--medio) var(--ease-out);
 }
 
-.logo:hover .logo-imagem {
-    transform: scale(1.04);
+@media (hover: hover) and (pointer: fine) {
+    .logo:hover .logo-imagem {
+        transform: scale(1.04);
+    }
 }
 
 .logo-divisor {
@@ -234,7 +241,7 @@ a:hover {
     color: var(--cinza-700);
     border-radius: var(--raio-sm);
     cursor: pointer;
-    transition: color var(--rapido) var(--curva), background-color var(--rapido) var(--curva);
+    transition: color var(--rapido) var(--ease-out), background-color var(--rapido) var(--ease-out);
 }
 
 .menu > .menu-link::after,
@@ -249,19 +256,26 @@ a:hover {
     background: var(--vermelho-500);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform var(--medio) var(--curva);
+    transition: transform var(--medio) var(--ease-out);
 }
 
-.menu-link:hover {
-    color: var(--preto);
-    background: var(--cinza-100);
+@media (hover: hover) and (pointer: fine) {
+    .menu-link:hover {
+        color: var(--preto);
+        background: var(--cinza-100);
+    }
 }
 
-.menu > .menu-link:hover::after,
-.menu-grupo > .menu-botao:hover::after,
 .menu > .menu-link.ativo::after,
 .menu-grupo.aberto-secao > .menu-botao::after {
     transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .menu > .menu-link:hover::after,
+    .menu-grupo > .menu-botao:hover::after {
+        transform: scaleX(1);
+    }
 }
 
 .menu > .menu-link.ativo,
@@ -279,7 +293,7 @@ a:hover {
     width: 15px !important;
     height: 15px !important;
     margin-left: -2px;
-    transition: transform var(--medio) var(--curva);
+    transition: transform var(--medio) var(--ease-in-out);
 }
 
 .menu-grupo {
@@ -306,7 +320,7 @@ a:hover {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px);
-    transition: opacity var(--medio) var(--curva), transform var(--medio) var(--curva), visibility var(--medio);
+    transition: opacity var(--medio) var(--ease-out), transform var(--medio) var(--ease-out), visibility var(--medio);
 }
 
 .submenu::before {
@@ -332,17 +346,21 @@ a:hover {
 
 .submenu .menu-link .icone {
     color: var(--cinza-500);
-    transition: color var(--rapido) var(--curva), transform var(--rapido) var(--curva);
+    transition: color var(--rapido) var(--ease-out), transform var(--rapido) var(--ease-out);
 }
 
-.submenu .menu-link:hover {
-    background: var(--vermelho-050);
-    color: var(--vermelho-700);
+@media (hover: hover) and (pointer: fine) {
+    .submenu .menu-link:hover {
+        background: var(--vermelho-050);
+        color: var(--vermelho-700);
+    }
 }
 
-.submenu .menu-link:hover .icone {
-    color: var(--vermelho-500);
-    transform: translateX(2px);
+@media (hover: hover) and (pointer: fine) {
+    .submenu .menu-link:hover .icone {
+        color: var(--vermelho-500);
+        transform: translateX(2px);
+    }
 }
 
 .submenu .menu-link.ativo {
@@ -382,7 +400,7 @@ a:hover {
     height: 2px;
     border-radius: 2px;
     background: var(--preto);
-    transition: transform var(--medio) var(--curva), opacity var(--rapido);
+    transition: transform var(--medio) var(--ease-in-out), opacity var(--rapido);
 }
 
 .menu-abrir span:nth-child(1) { top: 15px; }
@@ -398,7 +416,6 @@ a:hover {
     flex: 1;
     padding-top: 36px;
     padding-bottom: 64px;
-    animation: surgir var(--lento) var(--curva) both;
 }
 
 h1,
@@ -443,7 +460,7 @@ h2 {
     height: 3px;
     border-radius: 3px;
     background: var(--gradiente-marca);
-    animation: crescer-linha var(--lento) var(--curva) .15s both;
+    animation: crescer-linha var(--lento) var(--ease-out) .15s both;
 }
 
 .vazio {
@@ -480,7 +497,7 @@ h2 {
     border-left: 4px solid var(--cinza-500);
     box-shadow: var(--sombra-3);
     font-size: 14.5px;
-    animation: entrar-toast var(--lento) var(--curva) both;
+    animation: entrar-toast var(--lento) var(--ease-out) both;
 }
 
 .mensagem::after {
@@ -497,7 +514,7 @@ h2 {
 }
 
 .mensagem.saindo {
-    animation: sair-toast var(--medio) var(--curva) forwards;
+    animation: sair-toast var(--medio) var(--ease-out) forwards;
 }
 
 .mensagem-success { border-left-color: var(--sucesso); color: #155f35; }
@@ -521,9 +538,11 @@ h2 {
     transition: background-color var(--rapido), color var(--rapido);
 }
 
-.mensagem-fechar:hover {
-    background: var(--cinza-100);
-    color: var(--preto);
+@media (hover: hover) and (pointer: fine) {
+    .mensagem-fechar:hover {
+        background: var(--cinza-100);
+        color: var(--preto);
+    }
 }
 
 .mensagem-fechar .icone {
@@ -552,19 +571,21 @@ h2 {
     white-space: nowrap;
     cursor: pointer;
     box-shadow: 0 1px 2px rgba(75, 0, 0, .2);
-    transition: background-color var(--rapido) var(--curva), transform var(--rapido) var(--curva),
-        box-shadow var(--rapido) var(--curva), color var(--rapido) var(--curva), border-color var(--rapido);
+    transition: background-color var(--rapido) var(--ease-out), transform var(--rapido) var(--ease-out),
+        box-shadow var(--rapido) var(--ease-out), color var(--rapido) var(--ease-out), border-color var(--rapido);
 }
 
-.botao:hover {
-    background: var(--vermelho-700);
-    color: var(--branco);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(157, 28, 15, .28);
+@media (hover: hover) and (pointer: fine) {
+    .botao:hover {
+        background: var(--vermelho-700);
+        color: var(--branco);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(157, 28, 15, .28);
+    }
 }
 
 .botao:active {
-    transform: translateY(1px);
+    transform: scale(0.97);
     box-shadow: 0 1px 2px rgba(75, 0, 0, .2);
 }
 
@@ -580,11 +601,13 @@ h2 {
     box-shadow: none;
 }
 
-.botao-neutro:hover {
-    background: var(--cinza-100);
-    color: var(--preto);
-    border-color: var(--cinza-500);
-    box-shadow: var(--sombra-1);
+@media (hover: hover) and (pointer: fine) {
+    .botao-neutro:hover {
+        background: var(--cinza-100);
+        color: var(--preto);
+        border-color: var(--cinza-500);
+        box-shadow: var(--sombra-1);
+    }
 }
 
 .botao-perigo {
@@ -592,9 +615,11 @@ h2 {
     color: var(--branco);
 }
 
-.botao-perigo:hover {
-    background: var(--vermelho-800);
-    box-shadow: 0 6px 14px rgba(75, 0, 0, .3);
+@media (hover: hover) and (pointer: fine) {
+    .botao-perigo:hover {
+        background: var(--vermelho-800);
+        box-shadow: 0 6px 14px rgba(75, 0, 0, .3);
+    }
 }
 
 .botao-pequeno {
@@ -608,10 +633,12 @@ h2 {
     color: var(--vermelho-700);
 }
 
-.botao-claro:hover {
-    background: var(--branco);
-    color: var(--vermelho-800);
-    box-shadow: 0 10px 22px rgba(0, 0, 0, .25);
+@media (hover: hover) and (pointer: fine) {
+    .botao-claro:hover {
+        background: var(--branco);
+        color: var(--vermelho-800);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, .25);
+    }
 }
 
 .botao-contorno-claro {
@@ -621,18 +648,20 @@ h2 {
     box-shadow: none;
 }
 
-.botao-contorno-claro:hover {
-    background: rgba(255, 255, 255, .12);
-    border-color: var(--branco);
+@media (hover: hover) and (pointer: fine) {
+    .botao-contorno-claro:hover {
+        background: rgba(255, 255, 255, .12);
+        border-color: var(--branco);
+    }
 }
 
 .onda {
     position: absolute;
     border-radius: 50%;
     background: rgba(255, 255, 255, .45);
-    transform: scale(0);
+    transform: scale(.3);
     pointer-events: none;
-    animation: onda 600ms var(--curva) forwards;
+    animation: onda 450ms var(--ease-out) forwards;
 }
 
 .botao-neutro .onda {
@@ -721,7 +750,7 @@ h2 {
     background: var(--branco) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b6b6b' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 16px center / 18px;
     font: inherit;
     box-shadow: var(--sombra-1);
-    transition: border-color var(--rapido), box-shadow var(--rapido), width var(--medio) var(--curva);
+    transition: border-color var(--rapido), box-shadow var(--rapido);
 }
 
 .caixa-busca input:focus {
@@ -774,11 +803,13 @@ h2 {
 }
 
 .tabela tbody tr {
-    transition: background-color var(--rapido) var(--curva);
+    transition: background-color var(--rapido) var(--ease-out);
 }
 
-.tabela tbody tr:hover {
-    background: rgba(239, 56, 30, .045);
+@media (hover: hover) and (pointer: fine) {
+    .tabela tbody tr:hover {
+        background: rgba(239, 56, 30, .045);
+    }
 }
 
 .tabela td a:not(.botao) {
@@ -788,12 +819,14 @@ h2 {
     background-size: 0 2px;
     background-position: 0 100%;
     background-repeat: no-repeat;
-    transition: background-size var(--medio) var(--curva), color var(--rapido);
+    transition: background-size var(--medio) var(--ease-out), color var(--rapido);
 }
 
-.tabela td a:not(.botao):hover {
-    color: var(--vermelho-600);
-    background-size: 100% 2px;
+@media (hover: hover) and (pointer: fine) {
+    .tabela td a:not(.botao):hover {
+        color: var(--vermelho-600);
+        background-size: 100% 2px;
+    }
 }
 
 .tabela .linha-atrasada {
@@ -842,13 +875,15 @@ td.coluna-acoes > * + * {
     border-radius: var(--raio);
     box-shadow: var(--sombra-1);
     padding: 18px;
-    transition: transform var(--medio) var(--curva), box-shadow var(--medio) var(--curva), border-color var(--medio);
+    transition: transform var(--medio) var(--ease-out), box-shadow var(--medio) var(--ease-out), border-color var(--medio);
 }
 
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--sombra-3);
-    border-color: var(--vermelho-100);
+@media (hover: hover) and (pointer: fine) {
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--sombra-3);
+        border-color: var(--vermelho-100);
+    }
 }
 
 .card-livro {
@@ -867,11 +902,13 @@ td.coluna-acoes > * + * {
     width: 100%;
     aspect-ratio: 2 / 3;
     object-fit: cover;
-    transition: transform 600ms var(--curva);
+    transition: transform 600ms var(--ease-out);
 }
 
-.card-livro:hover .capa-livro {
-    transform: scale(1.05);
+@media (hover: hover) and (pointer: fine) {
+    .card-livro:hover .capa-livro {
+        transform: scale(1.05);
+    }
 }
 
 .capa-vazia {
@@ -897,8 +934,10 @@ td.coluna-acoes > * + * {
     color: var(--preto);
 }
 
-.card-livro h2 a:hover {
-    color: var(--vermelho-600);
+@media (hover: hover) and (pointer: fine) {
+    .card-livro h2 a:hover {
+        color: var(--vermelho-600);
+    }
 }
 
 .card-livro-autores {
@@ -955,7 +994,7 @@ td.coluna-acoes > * + * {
     background: var(--branco);
     color: var(--preto);
     font: inherit;
-    transition: border-color var(--rapido) var(--curva), box-shadow var(--rapido) var(--curva), background-color var(--rapido);
+    transition: border-color var(--rapido) var(--ease-out), box-shadow var(--rapido) var(--ease-out), background-color var(--rapido);
 }
 
 .campo select[multiple] {
@@ -968,10 +1007,12 @@ td.coluna-acoes > * + * {
     resize: vertical;
 }
 
-.campo input:hover,
-.campo select:hover,
-.campo textarea:hover {
-    border-color: var(--cinza-500);
+@media (hover: hover) and (pointer: fine) {
+    .campo input:hover,
+    .campo select:hover,
+    .campo textarea:hover {
+        border-color: var(--cinza-500);
+    }
 }
 
 .campo input:focus,
@@ -998,9 +1039,11 @@ td.coluna-acoes > * + * {
     transition: border-color var(--rapido), background-color var(--rapido);
 }
 
-.campo input[type="file"]:hover {
-    border-color: var(--vermelho-500);
-    background: var(--vermelho-050);
+@media (hover: hover) and (pointer: fine) {
+    .campo input[type="file"]:hover {
+        border-color: var(--vermelho-500);
+        background: var(--vermelho-050);
+    }
 }
 
 .campo input[type="file"]::file-selector-button {
@@ -1016,8 +1059,10 @@ td.coluna-acoes > * + * {
     transition: background-color var(--rapido);
 }
 
-.campo input[type="file"]::file-selector-button:hover {
-    background: var(--vermelho-700);
+@media (hover: hover) and (pointer: fine) {
+    .campo input[type="file"]::file-selector-button:hover {
+        background: var(--vermelho-700);
+    }
 }
 
 .ajuda {
@@ -1038,7 +1083,7 @@ td.coluna-acoes > * + * {
     display: flex;
     align-items: center;
     gap: 6px;
-    animation: tremer 360ms var(--curva);
+    animation: tremer 360ms var(--ease-out);
 }
 
 .errorlist li::before {
@@ -1085,7 +1130,7 @@ td.coluna-acoes > * + * {
     margin: -6px 0 18px;
     border-radius: var(--raio-sm);
     box-shadow: var(--sombra-2);
-    animation: surgir var(--medio) var(--curva) both;
+    animation: surgir var(--medio) var(--ease-out) both;
 }
 
 .oculto {
@@ -1234,7 +1279,7 @@ td.coluna-acoes > * + * {
     border-radius: var(--raio);
     box-shadow: var(--sombra-1);
     color: var(--preto);
-    transition: transform var(--medio) var(--curva), box-shadow var(--medio) var(--curva), border-color var(--medio);
+    transition: transform var(--medio) var(--ease-out), box-shadow var(--medio) var(--ease-out), border-color var(--medio);
 }
 
 .contador::after {
@@ -1247,18 +1292,22 @@ td.coluna-acoes > * + * {
     background: var(--gradiente-marca);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform var(--medio) var(--curva);
+    transition: transform var(--medio) var(--ease-out);
 }
 
-.contador:hover {
-    color: var(--preto);
-    transform: translateY(-4px);
-    box-shadow: var(--sombra-3);
-    border-color: var(--vermelho-100);
+@media (hover: hover) and (pointer: fine) {
+    .contador:hover {
+        color: var(--preto);
+        transform: translateY(-4px);
+        box-shadow: var(--sombra-3);
+        border-color: var(--vermelho-100);
+    }
 }
 
-.contador:hover::after {
-    transform: scaleX(1);
+@media (hover: hover) and (pointer: fine) {
+    .contador:hover::after {
+        transform: scaleX(1);
+    }
 }
 
 .contador-icone {
@@ -1270,7 +1319,7 @@ td.coluna-acoes > * + * {
     border-radius: 12px;
     background: var(--vermelho-050);
     color: var(--vermelho-600);
-    transition: transform var(--medio) var(--curva), background-color var(--medio), color var(--medio);
+    transition: transform var(--medio) var(--ease-out), background-color var(--medio), color var(--medio);
 }
 
 .contador-icone .icone {
@@ -1278,11 +1327,13 @@ td.coluna-acoes > * + * {
     height: 21px;
 }
 
-.contador:hover .contador-icone,
-.acao-rapida:hover .contador-icone {
-    transform: rotate(-6deg) scale(1.06);
-    background: var(--vermelho-600);
-    color: var(--branco);
+@media (hover: hover) and (pointer: fine) {
+    .contador:hover .contador-icone,
+    .acao-rapida:hover .contador-icone {
+        transform: rotate(-6deg) scale(1.06);
+        background: var(--vermelho-600);
+        color: var(--branco);
+    }
 }
 
 .contador-numero {
@@ -1355,7 +1406,7 @@ td.coluna-acoes > * + * {
     background: var(--gradiente-marca);
     background-size: 200% 100%;
     transform-origin: left;
-    animation: preencher 1.1s var(--curva) .2s both, deslizar-gradiente 6s linear infinite;
+    animation: preencher 1.1s var(--ease-out) .2s both;
 }
 
 .ocupacao-legenda {
@@ -1408,14 +1459,16 @@ td.coluna-acoes > * + * {
     border-radius: var(--raio);
     box-shadow: var(--sombra-1);
     color: var(--preto);
-    transition: transform var(--medio) var(--curva), box-shadow var(--medio) var(--curva), border-color var(--medio);
+    transition: transform var(--medio) var(--ease-out), box-shadow var(--medio) var(--ease-out), border-color var(--medio);
 }
 
-.acao-rapida:hover {
-    color: var(--preto);
-    transform: translateY(-4px);
-    box-shadow: var(--sombra-3);
-    border-color: var(--vermelho-100);
+@media (hover: hover) and (pointer: fine) {
+    .acao-rapida:hover {
+        color: var(--preto);
+        transform: translateY(-4px);
+        box-shadow: var(--sombra-3);
+        border-color: var(--vermelho-100);
+    }
 }
 
 .acao-rapida strong {
@@ -1425,6 +1478,12 @@ td.coluna-acoes > * + * {
 .acao-rapida small {
     color: var(--cinza-500);
     font-size: 13px;
+}
+
+.card:active,
+.contador:active,
+.acao-rapida:active {
+    transform: scale(0.99);
 }
 
 /* 10. Rodapé ---------------------------------------------------------------- */
@@ -1478,7 +1537,7 @@ td.coluna-acoes > * + * {
 .revelar.visivel {
     opacity: 1;
     transform: none;
-    transition: opacity 500ms var(--curva), transform 500ms var(--curva);
+    transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
     transition-delay: var(--atraso, 0ms);
 }
 
@@ -1512,6 +1571,7 @@ td.coluna-acoes > * + * {
 }
 
 @keyframes onda {
+    from { transform: scale(.3); opacity: .45; }
     to { transform: scale(4); opacity: 0; }
 }
 
@@ -1549,9 +1609,11 @@ td.coluna-acoes > * + * {
         transform: translateY(0);
     }
 
+@media (hover: hover) and (pointer: fine) {
     .menu-grupo:hover .icone-seta {
-        transform: rotate(180deg);
-    }
+            transform: rotate(180deg);
+        }
+}
 }
 
 @media (max-width: 960px) {
@@ -1573,8 +1635,9 @@ td.coluna-acoes > * + * {
         box-shadow: var(--sombra-3);
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-10px);
-        transition: opacity var(--medio) var(--curva), transform var(--medio) var(--curva), visibility var(--medio);
+        transform: translateY(-6px);
+        transform-origin: top;
+        transition: opacity var(--medio) var(--ease-out), transform var(--medio) var(--ease-out), visibility var(--medio);
         max-height: calc(100vh - var(--altura-cabecalho));
         overflow-y: auto;
     }
@@ -1615,7 +1678,7 @@ td.coluna-acoes > * + * {
 
     .menu-grupo.aberto .submenu {
         display: flex;
-        animation: surgir var(--medio) var(--curva) both;
+        animation: surgir var(--medio) var(--ease-out) both;
     }
 
     .menu-admin {
@@ -1670,6 +1733,15 @@ td.coluna-acoes > * + * {
 
     .ocupacao-total {
         margin-left: 0;
+    }
+}
+
+@media (pointer: coarse) {
+    .campo input,
+    .campo select,
+    .campo textarea,
+    .caixa-busca input {
+        font-size: 16px;
     }
 }
 
