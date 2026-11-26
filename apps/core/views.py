@@ -1,4 +1,4 @@
-"""Views gerais do projeto (páginas que não pertencem a um app)."""
+"""Views do app core: página inicial (painel) do sistema."""
 from django.db.models import Q
 from django.shortcuts import render
 from django.utils import timezone
@@ -10,8 +10,9 @@ from multas.models import Multa
 from reservas.models import Reserva
 
 
-def inicio(request):
-    """Página inicial (dashboard) com os contadores do acervo e da circulação."""
+def home(request):
+    """Página inicial (painel) com os contadores do acervo e da circulação."""
+    template_name = 'core/home.html'
     hoje = timezone.localdate()
     abertos = Q(data_devolucao__isnull=True)
     atrasados = abertos & Q(data_prevista__lt=hoje)
@@ -41,7 +42,7 @@ def inicio(request):
         'leitor', 'exemplar__livro',
     ).order_by('-data_emprestimo')[:5]
 
-    return render(request, 'inicio.html', {
+    return render(request, template_name, {
         'contadores': contadores,
         'ocupacao': ocupacao,
         'ultimos_emprestimos': ultimos_emprestimos,
