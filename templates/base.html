@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#ffffff">
     <meta name="color-scheme" content="light">
-    <title>{% block titulo %}Sistema de Biblioteca{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/estilo.css' %}?v=5">
+    <title>{% block title %}Sistema de Biblioteca{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}?v=6">
 </head>
-<body data-secao="{% with a=request.resolver_match.app_name %}{% if not a %}painel{% elif a in 'livros exemplares autores editoras categorias estantes' %}acervo{% elif a in 'leitores funcionarios' %}pessoas{% else %}circulacao{% endif %}{% endwith %}">
+<body data-secao="{% with a=request.resolver_match.app_name %}{% if not a or a == 'core' %}painel{% elif a in 'livros exemplares autores editoras categorias estantes' %}acervo{% elif a in 'leitores funcionarios' %}pessoas{% else %}circulacao{% endif %}{% endwith %}">
     <!-- Sprite de icones (SVG inline, sem bibliotecas externas) -->
     <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
         <defs>
@@ -33,7 +33,7 @@
 
     <div class="app">
         <header class="barra-movel">
-            <a class="marca" href="{% url 'inicio' %}">
+            <a class="marca" href="{% url 'core:home' %}">
                 <img src="{% static 'img/uniritter.png' %}" alt="UniRitter">
                 <span>Biblioteca</span>
             </a>
@@ -44,13 +44,13 @@
 
         {% with app_atual=request.resolver_match.app_name %}
         <aside class="lateral" id="menu-principal" aria-label="Menu principal">
-            <a class="marca lateral-marca" href="{% url 'inicio' %}">
+            <a class="marca lateral-marca" href="{% url 'core:home' %}">
                 <img src="{% static 'img/uniritter.png' %}" alt="UniRitter">
             </a>
             <p class="lateral-sistema">Sistema de Biblioteca</p>
 
             <nav class="lateral-nav">
-                <a class="lateral-link area-painel{% if request.resolver_match.url_name == 'inicio' %} ativo{% endif %}" href="{% url 'inicio' %}">
+                <a class="lateral-link area-painel{% if request.resolver_match.app_name == 'core' %} ativo{% endif %}" href="{% url 'core:home' %}">
                     <svg class="icone" aria-hidden="true"><use href="#ic-inicio"/></svg>Painel
                 </a>
 
@@ -81,7 +81,7 @@
         {% endwith %}
 
         <main class="conteudo-principal">
-            {% block conteudo %}{% endblock %}
+            {% block body %}{% endblock %}
         </main>
     </div>
 
@@ -93,7 +93,7 @@
         </ul>
     {% endif %}
 
-    <script src="{% static 'js/app.js' %}?v=5"></script>
+    <script src="{% static 'js/app.js' %}?v=6"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

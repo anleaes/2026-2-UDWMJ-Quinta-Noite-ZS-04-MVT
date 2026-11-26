@@ -6,12 +6,16 @@ que fica fora do Git. Veja `.env.example` para o modelo.
 """
 
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 # Caminho base do projeto (onde fica o manage.py).
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Os apps do projeto ficam na pasta "apps" (padrão da aula).
+sys.path.insert(0, str(BASE_DIR / 'apps'))
 
 # Carrega as variáveis do .env (não sobrescreve as já definidas no ambiente).
 load_dotenv(BASE_DIR / '.env')
@@ -38,19 +42,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Apps do projeto (uma linha por app)
-    'categorias',
-    'autores',
-    'editoras',
-    'estantes',
-    'livros',
-    'exemplares',
-    'leitores',
-    'funcionarios',
-    'emprestimos',
-    'multas',
-    'reservas',
-    'avaliacoes',
+    # Apps do projeto (pasta "apps")
+    'core.apps.CoreConfig',
+    'categorias.apps.CategoriasConfig',
+    'autores.apps.AutoresConfig',
+    'editoras.apps.EditorasConfig',
+    'estantes.apps.EstantesConfig',
+    'livros.apps.LivrosConfig',
+    'exemplares.apps.ExemplaresConfig',
+    'leitores.apps.LeitoresConfig',
+    'funcionarios.apps.FuncionariosConfig',
+    'emprestimos.apps.EmprestimosConfig',
+    'multas.apps.MultasConfig',
+    'reservas.apps.ReservasConfig',
+    'avaliacoes.apps.AvaliacoesConfig',
 ]
 
 MIDDLEWARE = [
