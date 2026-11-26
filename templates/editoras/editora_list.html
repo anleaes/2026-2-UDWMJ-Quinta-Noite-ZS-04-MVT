@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Editoras — Sistema de Biblioteca{% endblock %}
+
+{% block body %}
+<div class="cabecalho-pagina">
+    <h1>Editoras</h1>
+    <a class="botao" href="{% url 'editoras:editora_criar' %}">+ Nova editora</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-editoras" placeholder="Buscar por nome, CNPJ, cidade…" aria-label="Buscar editoras">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if editoras %}
+<table class="tabela" id="tabela-editoras" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CNPJ</th>
+            <th>Cidade</th>
+            <th>E-mail</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for editora in editoras %}
+        <tr>
+            <td><a href="{% url 'editoras:editora_detalhar' editora.pk %}">{{ editora.nome }}</a></td>
+            <td>{{ editora.cnpj }}</td>
+            <td>{{ editora.cidade }}</td>
+            <td>{{ editora.email }}</td>
+            <td class="coluna-acoes">
+                <a class="botao botao-pequeno" href="{% url 'editoras:editora_editar' editora.pk %}">Editar</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'editoras:editora_excluir' editora.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhuma editora cadastrada ainda.</p>
+{% endif %}
+{% endblock %}

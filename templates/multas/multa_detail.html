@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Multa de {{ multa.emprestimo.leitor.nome }} — Multas{% endblock %}
+
+{% block body %}
+<div class="cabecalho-pagina">
+    <h1>Multa de {{ multa.emprestimo.leitor.nome }}</h1>
+    <div class="acoes">
+        {% if not multa.paga %}
+        <form method="post" action="{% url 'multas:multa_marcar_paga' multa.pk %}" class="form-inline" data-confirmar="Marcar esta multa como paga? A data de hoje será registrada.">
+            {% csrf_token %}
+            <button class="botao" type="submit">Marcar como paga</button>
+        </form>
+        {% endif %}
+        <a class="botao botao-neutro" href="{% url 'multas:multa_editar' multa.pk %}">Comprovante</a>
+        <a class="botao botao-perigo" href="{% url 'multas:multa_excluir' multa.pk %}">Excluir</a>
+        <a class="botao botao-neutro" href="{% url 'multas:multa_listar' %}">Voltar</a>
+    </div>
+</div>
+
+<dl class="detalhes">
+    <dt>Leitor</dt><dd><a href="{% url 'leitores:leitor_detalhar' multa.emprestimo.leitor.pk %}">{{ multa.emprestimo.leitor.nome }}</a></dd>
+    <dt>Empréstimo</dt><dd><a href="{% url 'emprestimos:emprestimo_detalhar' multa.emprestimo.pk %}">{{ multa.emprestimo }}</a></dd>
+    <dt>Dias de atraso</dt><dd>{{ multa.dias_atraso }}</dd>
+    <dt>Valor</dt><dd>R$ {{ multa.valor|floatformat:2 }}</dd>
+    <dt>Paga</dt><dd>{% if multa.paga %}Sim{% else %}Não{% endif %}</dd>
+    <dt>Data do pagamento</dt><dd>{{ multa.data_pagamento|date:"d/m/Y"|default:"—" }}</dd>
+    <dt>Comprovante</dt>
+    <dd>
+        {% if multa.comprovante %}
+            <a href="{{ multa.comprovante.url }}" target="_blank" rel="noopener">Visualizar comprovante</a>
+        {% else %}
+            —
+        {% endif %}
+    </dd>
+</dl>
+{% endblock %}

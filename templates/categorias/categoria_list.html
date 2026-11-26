@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorias — Sistema de Biblioteca{% endblock %}
+
+{% block body %}
+<div class="cabecalho-pagina">
+    <h1>Categorias</h1>
+    <a class="botao" href="{% url 'categorias:categoria_criar' %}">+ Nova categoria</a>
+</div>
+
+<div class="caixa-busca">
+    <input type="search" data-busca data-busca-alvo="#tabela-categorias" placeholder="Buscar por nome, slug, descrição…" aria-label="Buscar categorias">
+    <span class="busca-contagem" data-busca-contagem></span>
+</div>
+
+{% if categorias %}
+<table class="tabela" id="tabela-categorias" data-busca-lista>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Slug</th>
+            <th>Ativa</th>
+            <th class="coluna-acoes">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for categoria in categorias %}
+        <tr>
+            <td><a href="{% url 'categorias:categoria_detalhar' categoria.pk %}">{{ categoria.nome }}</a></td>
+            <td>{{ categoria.slug }}</td>
+            <td>{% if categoria.ativa %}Sim{% else %}Não{% endif %}</td>
+            <td class="coluna-acoes">
+                <a class="botao botao-pequeno" href="{% url 'categorias:categoria_editar' categoria.pk %}">Editar</a>
+                <a class="botao botao-pequeno botao-perigo" href="{% url 'categorias:categoria_excluir' categoria.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="vazio" data-busca-vazio hidden>Nenhum resultado.</p>
+{% else %}
+<p class="vazio">Nenhuma categoria cadastrada ainda.</p>
+{% endif %}
+{% endblock %}

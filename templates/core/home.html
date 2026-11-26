@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel — Sistema de Biblioteca{% endblock %}
+
+{% block body %}
+<div class="cabecalho-pagina">
+    <div>
+        <h1>Painel</h1>
+        <p class="subtitulo">{% now "l, j \d\e F \d\e Y" as hoje %}{{ hoje|lower|capfirst }}</p>
+    </div>
+    <div class="acoes">
+        <a class="botao botao-neutro" href="{% url 'leitores:leitor_criar' %}">Cadastrar leitor</a>
+        <a class="botao" href="{% url 'emprestimos:emprestimo_criar' %}">Novo empréstimo</a>
+    </div>
+</div>
+
+<section class="indicadores" aria-label="Indicadores da biblioteca">
+    <a class="indicador indicador-acervo" href="{% url 'livros:livro_listar' %}">
+        <span class="indicador-rotulo">Títulos no acervo</span>
+        <span class="indicador-numero">{{ contadores.livros }}</span>
+    </a>
+    <a class="indicador indicador-acervo" href="{% url 'exemplares:exemplar_listar' %}">
+        <span class="indicador-rotulo">Exemplares disponíveis</span>
+        <span class="indicador-numero">{{ contadores.exemplares_disponiveis }}<small>/ {{ ocupacao.total }}</small></span>
+    </a>
+    <a class="indicador indicador-circulacao" href="{% url 'emprestimos:emprestimo_listar' %}">
+        <span class="indicador-rotulo">Empréstimos em dia</span>
+        <span class="indicador-numero">{{ contadores.emprestimos_ativos }}</span>
+    </a>
+    <a class="indicador indicador-circulacao{% if contadores.emprestimos_atrasados %} indicador-alerta{% endif %}" href="{% url 'emprestimos:emprestimo_listar' %}">
+        <span class="indicador-rotulo">Atrasados</span>
+        <span class="indicador-numero">{{ contadores.emprestimos_atrasados }}</span>
+    </a>
+    <a class="indicador indicador-circulacao{% if contadores.multas_pendentes %} indicador-alerta{% endif %}" href="{% url 'multas:multa_listar' %}">
+        <span class="indicador-rotulo">Multas pendentes</span>
+        <span class="indicador-numero">{{ contadores.multas_pendentes }}</span>
+    </a>
+    <a class="indicador indicador-circulacao" href="{% url 'reservas:reserva_listar' %}">
+        <span class="indicador-rotulo">Reservas na fila</span>
+        <span class="indicador-numero">{{ contadores.reservas_aguardando }}</span>
+    </a>
+</section>
+
+<section class="ocupacao" aria-label="Ocupação do acervo">
+    <div class="ocupacao-texto">
+        <strong>{{ ocupacao.percentual_disponivel }}% do acervo disponível</strong>
+        <span>{{ ocupacao.disponiveis }} de {{ ocupacao.total }} exemplares · {{ ocupacao.indisponiveis }} emprestados ou indisponíveis</span>
+    </div>
+    <div class="barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ ocupacao.percentual_disponivel }}" aria-label="Percentual de exemplares disponíveis">
+        <span class="barra-preenchimento" style="--valor: {{ ocupacao.percentual_disponivel }}%"></span>
+    </div>
+</section>
+
+<section class="secao">
+    <div class="secao-cabecalho">
+        <h2>Últimos empréstimos</h2>
+        <a class="link-secao" href="{% url 'emprestimos:emprestimo_listar' %}">Ver todos</a>
+    </div>
+    {% if ultimos_emprestimos %}
+    <table class="tabela">
+        <thead>
+            <tr>
+                <th>Leitor</th>
+                <th>Exemplar</th>
+                <th>Emprestado em</th>
+                <th>Devolver até</th>
+                <th>Situação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emprestimo in ultimos_emprestimos %}
+            <tr class="{% if emprestimo.esta_atrasado %}linha-atrasada{% endif %}">
+                <td><a href="{% url 'emprestimos:emprestimo_detalhar' emprestimo.pk %}">{{ emprestimo.leitor.nome }}</a></td>
+                <td><span class="texto-suave">{{ emprestimo.exemplar.codigo_tombo }}</span> {{ emprestimo.exemplar.livro.titulo }}</td>
+                <td>{{ emprestimo.data_emprestimo|date:"d/m/Y" }}</td>
+                <td>{{ emprestimo.data_prevista|date:"d/m/Y" }}</td>
+                <td>
+                    {% if emprestimo.esta_atrasado %}
+                        <span class="etiqueta etiqueta-atraso">Atrasado</span>
+                    {% elif emprestimo.data_devolucao %}
+                        <span class="etiqueta etiqueta-sucesso">{{ emprestimo.get_status_display }}</span>
+                    {% else %}
+                        <span class="etiqueta">{{ emprestimo.get_status_display }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="vazio">Nenhum empréstimo registrado ainda.</p>
+    {% endif %}
+</section>
+{% endblock %}
