@@ -29,6 +29,27 @@
                 botaoMenu.setAttribute('aria-expanded', aberto ? 'true' : 'false');
                 botaoMenu.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
             });
+
+            // No celular, o menu lateral fecha ao tocar fora dele ou com Esc.
+            function fecharLateral() {
+                if (!menu.classList.contains('menu-aberto')) {
+                    return;
+                }
+                menu.classList.remove('menu-aberto');
+                botaoMenu.classList.remove('ativo');
+                botaoMenu.setAttribute('aria-expanded', 'false');
+                botaoMenu.setAttribute('aria-label', 'Abrir menu');
+            }
+            document.addEventListener('click', function (evento) {
+                if (!menu.contains(evento.target) && !botaoMenu.contains(evento.target)) {
+                    fecharLateral();
+                }
+            });
+            document.addEventListener('keydown', function (evento) {
+                if (evento.key === 'Escape') {
+                    fecharLateral();
+                }
+            });
         }
 
         document.querySelectorAll('.menu-botao').forEach(function (botao) {
@@ -355,6 +376,81 @@
         });
     }
 
+    /**
+     * Cor estável a partir de um texto (mesma categoria = mesma cor).
+     */
+    function corPorTexto(texto, paleta) {
+        let soma = 0;
+        for (let i = 0; i < texto.length; i += 1) {
+            soma = (soma * 31 + texto.charCodeAt(i)) % 100000;
+        }
+        return paleta[soma % paleta.length];
+    }
+
+    /**
+     * Livros sem capa ganham uma capa tipográfica com a cor da categoria.
+     */
+    function iniciarCapas() {
+        const paleta = ['#6e1d12', '#1f4e5f', '#7a5212', '#2f4a32', '#3b2f5c', '#2b2622', '#5c2a3d'];
+        document.querySelectorAll('.card-livro').forEach(function (card) {
+            const capa = card.querySelector('.capa-vazia');
+            if (!capa) {
+                return;
+            }
+            const titulo = (card.querySelector('h2') || {}).textContent || '';
+            const autor = (card.querySelector('.card-livro-autores') || {}).textContent || '';
+            let categoria = '';
+            card.querySelectorAll('.card-livro-meta').forEach(function (meta) {
+                const texto = meta.textContent.trim();
+                if (texto.indexOf('Categoria:') === 0) {
+                    categoria = texto.replace('Categoria:', '').trim();
+                }
+            });
+            capa.textContent = '';
+            capa.classList.add('capa-gerada');
+            capa.style.setProperty('--capa-cor', corPorTexto(categoria || titulo, paleta));
+            [['capa-categoria', categoria], ['capa-titulo', titulo.trim()], ['capa-autor', autor.trim()]].forEach(function (parte) {
+                const span = document.createElement('span');
+                span.className = parte[0];
+                span.textContent = parte[1];
+                capa.appendChild(span);
+            });
+        });
+    }
+
+    /**
+     * Nas tabelas com coluna "Foto", quem não tem foto ganha um avatar com iniciais.
+     */
+    function iniciarAvatares() {
+        const paleta = ['#a86a12', '#0e6680', '#c62a17', '#4d6b3a', '#5b4a8a', '#7a3b2e'];
+        document.querySelectorAll('.tabela').forEach(function (tabela) {
+            const cabecalhos = Array.prototype.map.call(tabela.querySelectorAll('thead th'), function (th) {
+                return th.textContent.trim().toLowerCase();
+            });
+            const colFoto = cabecalhos.indexOf('foto');
+            if (colFoto === -1) {
+                return;
+            }
+            tabela.querySelectorAll('tbody tr').forEach(function (linha) {
+                const celula = linha.children[colFoto];
+                const celulaNome = linha.children[colFoto + 1];
+                if (!celula || !celulaNome || celula.querySelector('img')) {
+                    return;
+                }
+                const nome = celulaNome.textContent.trim();
+                const partes = nome.split(/\s+/).filter(Boolean);
+                const iniciais = ((partes[0] || '?')[0] + (partes.length > 1 ? partes[partes.length - 1][0] : '')).toUpperCase();
+                const avatar = document.createElement('span');
+                avatar.className = 'avatar';
+                avatar.textContent = iniciais;
+                avatar.setAttribute('aria-hidden', 'true');
+                avatar.style.setProperty('--avatar-cor', corPorTexto(nome, paleta));
+                celula.textContent = '';
+                celula.appendChild(avatar);
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         iniciarMenu();
         iniciarCabecalho();
@@ -362,6 +458,8 @@
         iniciarPreview();
         iniciarMascaras();
         iniciarSelects();
+        iniciarCapas();
+        iniciarAvatares();
         iniciarConfirmacao();
         iniciarMensagens();
         iniciarOnda();
