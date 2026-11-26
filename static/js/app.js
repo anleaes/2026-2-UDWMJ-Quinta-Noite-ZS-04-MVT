@@ -306,7 +306,12 @@
         if (MOVIMENTO_REDUZIDO || !('IntersectionObserver' in window)) {
             return;
         }
-        const seletores = '.contador, .acao-rapida, .card, .ocupacao, .tabela tbody tr, .detalhes, .formulario, .foto-detalhe';
+        // A entrada em cascata existe só no painel (dashboard); nas listas,
+        // telas usadas o tempo todo, o conteúdo aparece direto.
+        if (!document.querySelector('.painel-contadores')) {
+            return;
+        }
+        const seletores = '.contador, .ocupacao, .acao-rapida, .painel-secao .tabela tbody tr';
         const elementos = document.querySelectorAll(seletores);
 
         const observador = new IntersectionObserver(function (entradas) {
